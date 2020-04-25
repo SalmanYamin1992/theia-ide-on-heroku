@@ -1,8 +1,9 @@
-# ------------------------------------------------------------
+# ============================================================
+# First stage: Builder image
 # Start with Ubuntu Bionic Beaver
-# ------------------------------------------------------------
+# ============================================================
 
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS builder
 
 # ------------------------------------------------------------
 # Install the curl, xz-utils, wget, git, sudo and build-essential packages
@@ -50,14 +51,27 @@ RUN gem install solargraph
 # Build the app
 # ------------------------------------------------------------
 
-RUN mkdir -p /home/project && mkdir -p /home/theia
+RUN mkdir -p /home/theia
 
 WORKDIR /home/theia
 
 ADD package.json ./package.json
 
 RUN sudo yarn --cache-folder ./ycache && sudo rm -rf ./ycache
-RUN NODE_OPTIONS="--max_old_space_size=8192" sudo yarn theia build
+RUN NODE_OPTIONS="--max_old_space_size=32768" sudo yarn theia build
+
+# ============================================================
+# Second stage: Working image
+# Ubuntu Bionic Beaver
+# ============================================================
+
+RUN mkdir -p /home/theia && mkdir -p /home/project
+
+WORKDIR /home/theia
+
+COPY --from=builder /home/theia .
+
+ADD package.json ./package.json
 
 # ------------------------------------------------------------
 # Expose the port that the app will run on
