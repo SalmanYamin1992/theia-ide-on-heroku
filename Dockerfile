@@ -58,7 +58,7 @@ WORKDIR /home/theia
 ADD package.json ./package.json
 
 RUN sudo yarn --cache-folder ./ycache && sudo rm -rf ./ycache
-RUN NODE_OPTIONS="--max_old_space_size=32768" sudo yarn theia build
+RUN NODE_OPTIONS="--max_old_space_size=32768000" sudo yarn theia build
 
 # ============================================================
 # Second stage: Working image
