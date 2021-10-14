@@ -18,10 +18,10 @@ FROM ubuntu:18.04 AS builder
 RUN apt-get update && apt-get -y install curl xz-utils wget git sudo build-essential
 
 # ------------------------------------------------------------
-# Install Node v10
+# Install Node v16
 # ------------------------------------------------------------
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 RUN sudo apt-get install -y nodejs
 
 # ------------------------------------------------------------
